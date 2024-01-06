@@ -10,7 +10,7 @@ const ideaModel = require("../models/ideaModel");
 
 // making the controller for getting the list of all the ideas currently in the database for this purpose 
 export const getAllIdeas = (req : Request, res : Response) => {
-    try {
+    // try {
         console.log("we are inside the ideas controller and inside the controller \n");
         const serviceResponse = getAllIdeasService();
         if(serviceResponse === "false")
@@ -28,9 +28,9 @@ export const getAllIdeas = (req : Request, res : Response) => {
         // res.json(responseData);
         res.json(responseData);
         
-    } catch (error : any) {
-        console.log("some error happened here for this purpose\n", error.message);
-    }
+    // } catch (error : any) {
+    //     console.log("some error happened here for this purpose\n", error.message);
+    // }
     // here we can have to call the service of the idea 
 
 }
