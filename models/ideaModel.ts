@@ -1,11 +1,12 @@
-// in this we will mention the idea model for this purpose 
-// here we will have the schema for the idea model for this purpose 
-// const mongoose = require("mongoose")
-import {Document, Schema, model, Types} from "mongoose";
 
-const ideaScheme = mongoose.Schema({
+
+import mongoose from "mongoose";
+
+
+
+const ideaScheme = new mongoose.Schema({
     _id : {
-        type : Types.ObjectId
+        type : mongoose.Types.ObjectId
     }, 
     ideaName : {
         type : String, 
@@ -21,8 +22,8 @@ const ideaScheme = mongoose.Schema({
         default : Date.now()
     }, 
     createdBy : {
-        type : Types.ObjectId, 
-        required : [true, "Please enter the user id who has created the idea."];
+        type : mongoose.Types.ObjectId, 
+        required : [true, "Please enter the user id who has created the idea."]
     }, 
     category : {
         type : String, 
@@ -36,17 +37,17 @@ const ideaScheme = mongoose.Schema({
     }, 
     upvotes : [{
         userId : {
-            type : Types.ObjectId
+            type : mongoose.Types.ObjectId
         }
     }], 
     saved : [{
         userID : {
-            type : Types.ObjectId
+            type : mongoose.Types.ObjectId
         }
     }], 
     shared : [{
         userId : {
-            type : Types.ObjectId
+            type : mongoose.Types.ObjectId
         }
     }], 
     othersKnow : {

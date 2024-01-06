@@ -1,7 +1,8 @@
 // import express from "express";
 const express = require("express");
 import { Request, Response } from "express";
-const app = express();
+// const app = express();
+const app = require("./app");
 const dotenv = require("dotenv");
 const connectDatabase = require("./config/database");
 
