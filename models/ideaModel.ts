@@ -56,7 +56,6 @@ const ideaScheme = new mongoose.Schema({
 
 });
 
-const ideaModel = mongoose.model("idea", ideaScheme);
+export const ideaModel = mongoose.model("idea", ideaScheme);
 
 // say everything went fine 
-module.exports = ideaModel;

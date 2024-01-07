@@ -4,9 +4,12 @@ import { applicationErrorMiddleware } from "./middleware/errorHandlerMiddleware"
 const express = require("express");
 const app = express();
 const ideaRoute = require("./routes/ideaRoutes")
+import authRoutes from "./routes/authRoutes";
+
 app.use(express.json());
 
 app.use("/api/v1", ideaRoute);
+app.use("/api/v1", authRoutes);
 
 app.use(applicationErrorMiddleware);
 
