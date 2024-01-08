@@ -2,18 +2,28 @@
 // const O{}
 
 import { OAuth2Client } from "google-auth-library"
+import { AuthenticationError } from "../errorHandling/AuthenticationError";
 
 export const validateGoogleTokenService = async (googleToken : string) => {
-    // here we have to validate the google token whether this is coming from the correct application or not 
-    // we will see whether this user is inside the database or not 
-    // if it not present then we will automatically register this user into the database and then send the access token to the user for this purpose 
     const client = new OAuth2Client();
 
+    console.log("inside the validate google token service for this purpose \n\n\n");
     const tokenValidation = await client.verifyIdToken({
         idToken : googleToken, 
         audience : process.env.CLIENT_ID
     });
 
+    if(tokenValidation == null)
+    {
+        throw new AuthenticationError("Validation failed");
+    }
 
-    console.log("the value of the tokevalidation is as follows \n", tokenValidation);
+    // now here we have to do the validation for this purpose 
+    const payload = tokenValidation.getPayload();
+    console.log("the payload value is as follows \n", payload);
+    
+    const userEmail = payload?.email;
+    const emailVerified = payload?.email_verified;
+    // say everything went fine 
+    return {email : userEmail};
 }
