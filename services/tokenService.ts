@@ -1,4 +1,4 @@
-import { userModel } from './../models/userModel';
+import User, { userModel } from './../models/userModel';
 // this is the service related to handling the tokens for the  solveit application for this purpose 
 // const O{}
 
@@ -32,6 +32,9 @@ export const validateGoogleTokenService = async (googleToken : string) => {
 
 
 // defining the service for creating a new token for this user 
-export const getLoginTokenService = (currUser : any) => {
+export const getLoginTokenService = (currUser : User) => {
+    console.log("the value of the current current user that was passed by the login service to the token service is as follows \n", currUser);
+
+    
     console.log("inside the get token service module.")
 }

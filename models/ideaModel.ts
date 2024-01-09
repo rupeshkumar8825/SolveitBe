@@ -1,7 +1,6 @@
 
 
 import mongoose, { Schema } from "mongoose";
-import { userModel } from "./userModel";
 
 // creating the interface for ideaModel for this purpose 
 export const  DOCUMENT_NAME = "Idea";
