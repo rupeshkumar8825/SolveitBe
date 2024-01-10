@@ -24,6 +24,7 @@ import AppConfig from "./config/appConfig";
 // import { createServer } from "http";
 import Logger from "./utils/logger";
 import { createServer } from "./server";
+import connectDatabase from "./config/database";
 dotenv.config();
 
 
@@ -46,3 +47,5 @@ const startServer = () => {
 
 // calling the function for this purpose 
 startServer();
+// after this we have to start the database server 
+connectDatabase();

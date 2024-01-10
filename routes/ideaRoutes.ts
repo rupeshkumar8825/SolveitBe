@@ -5,7 +5,6 @@ const express = require("express");
 const router = express.Router();
 
 
-router.route("/ideas").get(getAllIdeasController);
+router.route("/").get(getAllIdeasController);
 
-
-module.exports = router;
+export default router;
