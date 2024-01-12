@@ -1,35 +1,71 @@
 // this is authentication controller to mention the routes for authentication related functionality for this purpose 
 
 import express , {Express, Response, Request, NextFunction} from "express";
-import { validateGoogleTokenService } from "../services/tokenService";
 import { NotFoundError } from "../errorHandling/NotFoundError";
-import { loginService } from "../services/authService";
+import AuthenticationService from "../services/authService";
 
-export const loginController = async (req : Request, res : Response, next : NextFunction) => {
+// using the class based controllers here 
+class AuthController {
+    // inside we will be implementing the two functions 
+    async login (req : Request, res : Response, next : NextFunction) : Promise<void>  {
+        console.log('inside the login function of auth controller for this purpose \n');
 
-    const authorizationHeader = req.headers.authorization;
-    if(authorizationHeader == null)
-    {
-        throw new NotFoundError("Token Not Found.");
+        // fetching the body data from the request 
+        const authorizationHeader = req.headers.authorization;
+
+        if(authorizationHeader == null)
+        {
+            throw new NotFoundError("Token Not Found.");
+        }
+
+        // otherwise we have to fetch the value of the token 
+        const googleToken = authorizationHeader?.split(" ")[1].toString();
+
+        if(googleToken === "" || googleToken === null)
+        {
+            throw new NotFoundError("Token Not Found");
+        }
+
+
+        try {
+
+            const serviceResponse = await AuthenticationService.loginService(googleToken);
+            console.log("the response from the login service is as follows \n", serviceResponse);
+            res.status(200).json(serviceResponse);
+        } catch (error) {
+            next(error);       
+        }
+
     }
+}
 
-    const googleToken = authorizationHeader?.split(" ")[1].toString();
+export default new AuthController;
 
-    if(googleToken === "" || googleToken === null)
-    {
-        throw new NotFoundError("Token Not Found");
-    }
+// export const loginController = async (req : Request, res : Response, next : NextFunction) => {
+
+//     const authorizationHeader = req.headers.authorization;
+//     if(authorizationHeader == null)
+//     {
+//         throw new NotFoundError("Token Not Found.");
+//     }
+
+//     const googleToken = authorizationHeader?.split(" ")[1].toString();
+
+//     if(googleToken === "" || googleToken === null)
+//     {
+//         throw new NotFoundError("Token Not Found");
+//     }
 
 
-    try {
+//     try {
 
-        const serviceResponse = await loginService(googleToken);
-        console.log("the response from the login service is as follows \n", serviceResponse);
-        res.status(200).json(serviceResponse);
-    } catch (error) {
-        next(error);       
-    }
+//         const serviceResponse = await loginService(googleToken);
+//         console.log("the response from the login service is as follows \n", serviceResponse);
+//         res.status(200).json(serviceResponse);
+//     } catch (error) {
+//         next(error);       
+//     }
     
 
 
-}
+// }

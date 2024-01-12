@@ -14,7 +14,8 @@ const AppConfig = {
         ), 
         port : parseInt(<string>process.env.PORT, 10) | 4000,
         apiVersion : process.env.API_VERSION || 'v1', 
-        secret : process.env.SECRET || 'somescafaslkdf&*(&*(&2w3r'
+        secret : process.env.SECRET || 'somescafaslkdf&*(&*(&2w3r', 
+        clientId : process.env.CLIENT_ID
     }, 
 
 

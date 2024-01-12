@@ -4,37 +4,70 @@ import User, { userModel } from './../models/userModel';
 
 import { OAuth2Client } from "google-auth-library"
 import { AuthenticationError } from "../errorHandling/AuthenticationError";
+import AppConfig from '../config/appConfig';
 
-export const validateGoogleTokenService = async (googleToken : string) => {
-    const client = new OAuth2Client();
+export interface ITokenDecode{
+    user : string, 
+    email : string
+};
 
-    console.log("inside the validate google token service for this purpose \n\n\n");
-    const tokenValidation = await client.verifyIdToken({
-        idToken : googleToken, 
-        audience : process.env.CLIENT_ID
-    });
 
-    if(tokenValidation == null)
-    {
-        throw new AuthenticationError("Validation failed");
+// defining the interface for token service 
+interface ITokenService {
+    validateGoogleTokenService(googleToken : string) : Promise<ITokenDecode>, 
+    getLoginTokenService(currUser : User) : Promise<string>
+};
+
+
+// using the class based implementation for this purpose 
+class TokenService implements ITokenService {
+
+    async validateGoogleTokenService(googleToken: string): Promise<ITokenDecode> {
+        const client = new OAuth2Client();
+
+        const tokenValidation =await client.verifyIdToken({
+            idToken : googleToken, 
+            audience : AppConfig.app.clientId
+        });
+        
+        if(tokenValidation == null)
+        {
+            console.log("the token validation was not succesfully hence sending the error response in return for this purpose \n");
+            throw new AuthenticationError("Token Validation Failed!");
+        }
+        
+        // now here we have to do the validation for this purpose 
+        const payload = tokenValidation.getPayload();
+        console.log("the payload value is as follows \n", payload);
+        
+        const userEmail = payload?.email;
+        const emailVerified = payload?.email_verified;
+        const name = payload?.name;
+
+        if(!name || !userEmail)
+        {
+            // token validation again failed 
+            throw new AuthenticationError("Token Validation Failed.");
+        }
+
+
+        // say everything went fine 
+        let response : ITokenDecode = {
+            user : name as string, 
+            email : userEmail as string
+        };
+
+
+        return response;
     }
 
-    // now here we have to do the validation for this purpose 
-    const payload = tokenValidation.getPayload();
-    console.log("the payload value is as follows \n", payload);
-    
-    const userEmail = payload?.email;
-    const emailVerified = payload?.email_verified;
-    const name = payload?.name;
-    // say everything went fine 
-    return {email : userEmail, name : name};
+
+    async getLoginTokenService(currUser: User): Promise<string> {
+        console.log("here we have to return the new token for this user to the authservice for this purpose \n");
+        return "";
+    }
+
 }
 
 
-// defining the service for creating a new token for this user 
-export const getLoginTokenService = (currUser : User) => {
-    console.log("the value of the current current user that was passed by the login service to the token service is as follows \n", currUser);
-
-    
-    console.log("inside the get token service module.")
-}
+export default new TokenService();
