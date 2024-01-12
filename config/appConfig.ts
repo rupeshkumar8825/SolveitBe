@@ -26,8 +26,8 @@ const AppConfig = {
         password : process.env.DB_PASSWORD, 
         port : parseInt(<string>process.env.DB_PORT, 10) || 5432, 
         dialect : process.env.DB_DIALECT || 'postgres', 
-        isLogging : process.env.DB_LOG === 'true'
-          
+        isLogging : process.env.DB_LOG === 'true',
+        dbUri : `mongodb://localhost:27017/solveitdb`
 
     }
 };
