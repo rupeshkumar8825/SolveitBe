@@ -39,7 +39,7 @@ class AuthenticationService implements IAuthenticationService {
     
             // now we have to create a new token for this user 
             const loginToken = await TokenService.getLoginTokenService(currUser as User);
-
+            console.log("the value of the token that i got is as follows \n", loginToken);
             return loginToken;
         } catch (error : any) {
             console.log("the value of the error is as follows inside teh authservice\n", error);

@@ -1,4 +1,5 @@
 import User, { userModel } from './../models/userModel';
+import * as jwt from "jsonwebtoken";
 // this is the service related to handling the tokens for the  solveit application for this purpose 
 // const O{}
 
@@ -63,9 +64,11 @@ class TokenService implements ITokenService {
 
 
     async getLoginTokenService(currUser: User): Promise<string> {
-        console.log("here we have to return the new token for this user to the authservice for this purpose \n");
+        const expirationTime = Math.floor(Date.now() / 1000) + 300; // 2 minutes in seconds
+
+        const newToken = jwt.sign({_id : currUser._id, email : currUser.email}, AppConfig.app.secret, {expiresIn : expirationTime});
         
-        return "";
+        return newToken;
     }
 
 }
