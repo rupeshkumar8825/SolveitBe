@@ -64,6 +64,7 @@ class TokenService implements ITokenService {
 
     async getLoginTokenService(currUser: User): Promise<string> {
         console.log("here we have to return the new token for this user to the authservice for this purpose \n");
+        
         return "";
     }
 

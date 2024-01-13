@@ -33,6 +33,8 @@ class AuthController {
             console.log("the response from the login service is as follows \n", serviceResponse);
             res.status(200).json(serviceResponse);
         } catch (error) {
+            console.log("the error happened inside the authservice and we have catched it successfully inside auth controller for this purpose \n");
+            
             next(error);       
         }
 

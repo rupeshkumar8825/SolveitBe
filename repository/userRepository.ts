@@ -17,9 +17,8 @@ interface IUserRepository {
 
 // now we have to implement all this interfaces for this purpose 
 class UserRepository implements IUserRepository {
-    async createNewUser(newUser: User): Promise<boolean> {
+    async createNewUser(newUser: UserCreateRequestDto): Promise<boolean> {
         console.log("inside the create new use repository for this puropse \n");
-           // then we have to create a new user for this purpose 
         const currUser = new userModel <User>({
         _id : new mongoose.Types.ObjectId(), 
         userName : newUser.userName as string, 
@@ -28,11 +27,10 @@ class UserRepository implements IUserRepository {
 
         // here we have to save this into db for this purpose 
         const repositoryResponse = await userModel.create(currUser);
-        console.log("the response after creating new entry is as follows inside the user repository function is as follows \n", repositoryResponse);
         return true;
     }
 
-    
+
     deleteUser(userId: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }

@@ -17,15 +17,15 @@ export const createServer = () : Application => {
     // using the middlewares that are required for this application for this purpose 
     app.use(express.urlencoded({extended : false}))
     app.use(express.json());
-    app.use(applicationErrorMiddleware);
-    app.use(`api/${AppConfig.app.apiVersion}`, mainRouter);
-
+    app.use(`/api/${AppConfig.app.apiVersion}`, mainRouter);
+    console.log("value of the apiversion in the environment for this purpose \n", AppConfig.app.apiVersion);
     // checking whether the environment is development or not 
     if(AppConfig.app.isDevelopment)
     {
         console.log('we are in the development mode \n');
     }    
-
+    app.use(applicationErrorMiddleware);
+    
     // say everything went fine 
     return app;
 }
