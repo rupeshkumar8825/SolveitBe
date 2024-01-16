@@ -16,21 +16,3 @@ class IdeaController {
 
 // say everything went fine 
 export default new IdeaController;
-
-// // making the controller for getting the list of all the ideas currently in the database for this purpose 
-// export const getAllIdeasController = async (req : Request, res : Response, next : NextFunction) => {
-
-//     // here we will have to keep the code inside the try and catch block for this purpose 
-//     try {
-//         const serviceResponse = await getAllIdeasService();
-//         const responseData = {
-//             message : serviceResponse
-//         };
-
-//         res.status(200).json(responseData);
-        
-//     } catch (error) {
-//         next(error);
-//     }
-
-// }

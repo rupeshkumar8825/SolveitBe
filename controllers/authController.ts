@@ -33,8 +33,8 @@ class AuthController {
             console.log("the response from the login service is as follows \n", serviceResponse);
             res.status(200).json(serviceResponse);
         } catch (error) {
-            console.log("the error happened inside the authservice and we have catched it successfully inside auth controller for this purpose \n");
-            
+            // console.log("the error happened inside the authservice and we have catched it successfully inside auth controller for this purpose \n");
+            // console.log("the value of the error is as follows")
             next(error);       
         }
 
@@ -42,32 +42,3 @@ class AuthController {
 }
 
 export default new AuthController;
-
-// export const loginController = async (req : Request, res : Response, next : NextFunction) => {
-
-//     const authorizationHeader = req.headers.authorization;
-//     if(authorizationHeader == null)
-//     {
-//         throw new NotFoundError("Token Not Found.");
-//     }
-
-//     const googleToken = authorizationHeader?.split(" ")[1].toString();
-
-//     if(googleToken === "" || googleToken === null)
-//     {
-//         throw new NotFoundError("Token Not Found");
-//     }
-
-
-//     try {
-
-//         const serviceResponse = await loginService(googleToken);
-//         console.log("the response from the login service is as follows \n", serviceResponse);
-//         res.status(200).json(serviceResponse);
-//     } catch (error) {
-//         next(error);       
-//     }
-    
-
-
-// }

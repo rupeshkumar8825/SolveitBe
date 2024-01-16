@@ -6,6 +6,7 @@ import AppConfig from "./config/appConfig";
 import * as swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv'
 import mainRouter from "./routes/index";
+import cookieParser from "cookie-parser";
 dotenv.config();
 
 
@@ -17,6 +18,7 @@ export const createServer = () : Application => {
     // using the middlewares that are required for this application for this purpose 
     app.use(express.urlencoded({extended : false}))
     app.use(express.json());
+    app.use(cookieParser());
     app.use(`/api/${AppConfig.app.apiVersion}`, mainRouter);
     console.log("value of the apiversion in the environment for this purpose \n", AppConfig.app.apiVersion);
     // checking whether the environment is development or not 
