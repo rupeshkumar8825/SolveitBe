@@ -19,6 +19,8 @@ class IdeaRepository implements IIdeaRepository {
         // say everything went fine 
         return repositoryResponse
     }
+
+    
     getIdeaById(ideaId: string): Promise<Idea> {
         throw new Error("Method not implemented.");
     }
@@ -51,7 +53,7 @@ class IdeaRepository implements IIdeaRepository {
         return repositoryResponse;
     }
 
-    
+
     deleteIdeaById(ideaId: string): Promise<string> {
         throw new Error("Method not implemented.");
     }
