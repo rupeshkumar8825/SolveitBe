@@ -17,11 +17,20 @@ export interface ITokenDecode{
 interface ITokenService {
     validateGoogleTokenService(googleToken : string) : Promise<ITokenDecode>, 
     getLoginTokenService(currUser : User) : Promise<string>
+    decodeTokenService(token : string) : Promise<string>
 };
 
 
 // using the class based implementation for this purpose 
 class TokenService implements ITokenService {
+    async decodeTokenService(token: string): Promise<string> {
+        // here we have to decode the token for this purpose 
+        const decoded = await jwt.verify(token as string, AppConfig.app.secret);
+
+        // say everything went fine 
+        return decoded as string;
+        
+    }
 
     async validateGoogleTokenService(googleToken: string): Promise<ITokenDecode> {
         const client = new OAuth2Client();

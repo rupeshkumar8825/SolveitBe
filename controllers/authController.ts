@@ -6,11 +6,7 @@ import AuthenticationService from "../services/authService";
 
 // using the class based controllers here 
 class AuthController {
-    // inside we will be implementing the two functions 
     async login (req : Request, res : Response, next : NextFunction) : Promise<void>  {
-        console.log('inside the login function of auth controller for this purpose \n');
-
-        // fetching the body data from the request 
         const authorizationHeader = req.headers.authorization;
 
         if(authorizationHeader == null)
@@ -30,11 +26,8 @@ class AuthController {
         try {
 
             const serviceResponse = await AuthenticationService.loginService(googleToken);
-            console.log("the response from the login service is as follows \n", serviceResponse);
             res.status(200).json(serviceResponse);
         } catch (error) {
-            // console.log("the error happened inside the authservice and we have catched it successfully inside auth controller for this purpose \n");
-            // console.log("the value of the error is as follows")
             next(error);       
         }
 

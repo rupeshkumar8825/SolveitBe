@@ -36,7 +36,7 @@ export const applicationErrorMiddleware = (error: Error, req : Request, res : Re
     }
     else if(error instanceof ServerError)
     {
-        res.status(501).json({
+        res.status(500).json({
             error : error, 
         })
     } 
@@ -44,6 +44,12 @@ export const applicationErrorMiddleware = (error: Error, req : Request, res : Re
     {
         res.status(401).json({
             error : error, 
+        })
+    }
+    else 
+    {
+        res.status(500).json({
+            error : error.message
         })
     }
     
