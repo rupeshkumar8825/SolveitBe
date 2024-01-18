@@ -7,3 +7,5 @@ import UserController from '../controllers/userController';
 const router = express.Router();
 
 router.route("/").get(authMiddleware, UserController.getAllUsersController)
+
+export default router;

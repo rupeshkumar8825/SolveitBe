@@ -34,14 +34,20 @@ class UserRepository implements IUserRepository {
     deleteUser(userId: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
+
     upadteUser(uesrId: string, updatedDetails: User): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
+
     getUserDetails(userId: string): Promise<User> {
         throw new Error("Method not implemented.");
     }
-    getAllUsers(): Promise<User[]> {
-        throw new Error("Method not implemented.");
+
+
+    async getAllUsers(): Promise<User[]> {
+        let repositoryResponse : Array<User> = await userModel.find();
+        // say everything went fine 
+        return repositoryResponse;
     }
 
 }
