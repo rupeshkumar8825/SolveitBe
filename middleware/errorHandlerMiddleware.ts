@@ -8,8 +8,10 @@ import { BadRequestError } from "../errorHandling/BadRequestError";
 import { ServerError } from "../errorHandling/ServerError";
 import { JsonWebTokenError } from "jsonwebtoken";
 
-export const applicationErrorMiddleware = (error: Error, req : Request, res : Response , next : NextFunction) => {
+export const applicationErrorMiddleware = (error: any, req : Request, res : Response , next : NextFunction) => {
     // using the if else statement to check which error happened for this purpose
+    console.log("the error inside the global middlewares is as follows \n", error);
+    console.log("the error inside the global middlewares is as follows \n", error.message);
     if(error instanceof AuthenticationError)
     {
         res.status(401).json({

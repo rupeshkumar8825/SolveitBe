@@ -11,6 +11,18 @@ class UserController {
             next(error)
         }
     }
+
+    async getUserDetailsByIdController (req : Request, res: Response, next : NextFunction) : Promise<void> {
+        try {
+            const userId : string = req.params["userId"];
+            console.log("the value of the user id is as follows \n", userId);
+            let serviceResponse = await userService.getUserDetailsByIdService(userId);
+            res.status(200).json(serviceResponse);
+        } catch (error) {
+            console.log('the error is captured inside the controller of the user for this purpose The value of the error si as folllows for thios purpose\n', error);
+            next(error)
+        }
+    }
 }
 
 

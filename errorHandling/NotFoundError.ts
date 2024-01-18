@@ -4,6 +4,6 @@ import { CustomError } from "./customError";
 export class NotFoundError extends CustomError {
     constructor(message : string, user = {})
     {
-        super(message, user, "NOTFOUNDERRORA");
+        super(message, user, "NOTFOUNDERROR");
     }
 }

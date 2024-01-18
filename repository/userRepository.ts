@@ -11,7 +11,7 @@ interface IUserRepository {
     createNewUser (newUser : UserCreateRequestDto) : Promise<boolean >, 
     deleteUser (userId : string) : Promise<boolean>, 
     upadteUser (uesrId : string, updatedDetails : User) : Promise<boolean>, 
-    getUserDetails(userId : string) : Promise<User>, 
+    getUserDetails(userId : string) : Promise<User | null>, 
     getAllUsers() : Promise<Array<User>>
 };
 
@@ -35,12 +35,14 @@ class UserRepository implements IUserRepository {
         throw new Error("Method not implemented.");
     }
 
-    upadteUser(uesrId: string, updatedDetails: User): Promise<boolean> {
+    upadteUser(userId: string, updatedDetails: User): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
 
-    getUserDetails(userId: string): Promise<User> {
-        throw new Error("Method not implemented.");
+    async getUserDetails(userId: string): Promise<User | null> {
+        let repositoryResponse = await userModel.findOne({_id : userId.toString()});
+        // say everything went fine 
+        return repositoryResponse;
     }
 
 
