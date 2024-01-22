@@ -15,43 +15,50 @@ export const applicationErrorMiddleware = (error: any, req : Request, res : Resp
     if(error instanceof AuthenticationError)
     {
         res.status(401).json({
-            error : error
+            error : error, 
+            message : error.message 
         })
     }
     else if(error instanceof NotFoundError)
     {
         res.status(404).json({
-            error : error
+            error : error, 
+            message : error.message
         })
     }
     else if(error instanceof ConflictError)
     {
         res.status(409).json({
-            error : error
+            error : error, 
+            message : error.message
         })
     }
     else if(error instanceof BadRequestError)
     {
         res.status(400).json({
             error : error, 
+            message : error.message
         })
     }
     else if(error instanceof ServerError)
     {
         res.status(500).json({
             error : error, 
+            message : error.message
         })
     } 
     else if(error instanceof JsonWebTokenError)
     {
         res.status(401).json({
             error : error, 
+            message : error.message
         })
     }
     else 
     {
         res.status(500).json({
-            error : error.message
+            error : error.message, 
+            message : error.message
         })
     }
     
