@@ -8,5 +8,6 @@ const router = express.Router();
 
 
 router.route("/").get(authMiddleware, ideaController.getAllIdeasController);
+router.route("/").post(authMiddleware, ideaController.createNewIdeaController);
 
 export default router;

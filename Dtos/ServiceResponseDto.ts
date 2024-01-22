@@ -6,7 +6,7 @@ export class ServiceResponse <T>{
     message : string;
     success : boolean;
 
-    constructor(data : T, message : string, success : boolean)
+    constructor(data : T = null as T, message : string  = "", success : boolean = true)
     {
         this.data = data;
         this.message = message;

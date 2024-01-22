@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { IdeaCreateRequestDto, IdeaCreateResponseDto } from "../Dtos/IdeaRelatedDtos";
 import Idea, { ideaModel } from "../models/ideaModel";
 
@@ -30,7 +31,7 @@ class IdeaRepository implements IIdeaRepository {
     async createNewIdea(ideaDetails: IdeaCreateRequestDto): Promise<IdeaCreateResponseDto> {
         let repositoryResponse : IdeaCreateResponseDto = new IdeaCreateResponseDto();
         let newIdea = new ideaModel({
-            _id : "", 
+            _id : new mongoose.Types.ObjectId(), 
             ideaName : ideaDetails.ideaName, 
             ideaDescription : ideaDetails.ideaDescription, 
             createdOn : Date.now(), 
