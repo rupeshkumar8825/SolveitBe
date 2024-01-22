@@ -14,11 +14,11 @@ interface IIdeaService {
 
 class IdeaService implements IIdeaService {
     async getAllIdeasService(): Promise<ServiceResponse<Idea[]>> {
-        let listOfIdeas : Array<Idea> = [];
-
-        let response : ServiceResponse<Array<Idea>> = new ServiceResponse<Array<Idea>>(listOfIdeas, "", false);
-
+        
         try {
+            let listOfIdeas : Array<Idea> = [];
+    
+            let response : ServiceResponse<Array<Idea>> = new ServiceResponse<Array<Idea>>(listOfIdeas, "", false);
             listOfIdeas = await ideaRepository.getAllIdeas();
             response.data = listOfIdeas;
             response.message = "Success";
@@ -31,8 +31,21 @@ class IdeaService implements IIdeaService {
     }
 
 
-    getIdeaByIdService(ideaId: string): Promise<ServiceResponse<Idea>> {
-        throw new Error('Method not implemented.');
+    async getIdeaByIdService(ideaId: string): Promise<ServiceResponse<Idea>> {
+        // here we have to call the repository for fetching the details of the idea given the id for this purpose 
+        // using the try catch for this purpose 
+        try {
+            let repositoryResponse = await ideaRepository.getIdeaById(ideaId);
+            let serviceResponse = new ServiceResponse<Idea>();
+            serviceResponse.data = repositoryResponse;
+            serviceResponse.message = "Success";
+            serviceResponse.success = true;
+
+            // say everything went fine 
+            return serviceResponse;
+        } catch (error) {
+            throw error;
+        }
     }
     
     async addNewIdeaService(ideaDetails: IdeaCreateRequestDto): Promise<ServiceResponse<IdeaCreateResponseDto>> {
@@ -54,7 +67,7 @@ class IdeaService implements IIdeaService {
             serviceResponse.success = true;
             serviceResponse.message = "success";
             serviceResponse.data = repositoryResponse;
-            
+
             // say everything went fine 
             return serviceResponse;
         } catch (error) {
