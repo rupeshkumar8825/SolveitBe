@@ -22,7 +22,7 @@ class IdeaRepository implements IIdeaRepository {
         let repositoryResponse : string = "";
         // fetching the current user and current idea for this purpose 
         const currUser : User|null = await userModel.findOne({_id : userId});
-        const currIdea : Idea|null = await ideaModel.findOne({_id : ideaModel});
+        const currIdea : Idea|null = await ideaModel.findOne({_id : ideaId});
 
         // checking whether these exists or not for this purpose 
         if(!currUser)
@@ -35,9 +35,8 @@ class IdeaRepository implements IIdeaRepository {
         }
 
         // otherwise we have to fetch the list of shares 
-        const sharedList = await currIdea.shared;
+        let sharedList = currIdea.shared;
         let isPresent : boolean = false;
-
         // using the for loop for this purpose 
         sharedList.forEach((currShare : mongoose.Types.ObjectId) => {
             if(currShare._id.toString() === userId)
@@ -45,7 +44,7 @@ class IdeaRepository implements IIdeaRepository {
                 isPresent = true;
             }
         })
-
+        
         // here we have to implement the same logic as we have done before 
         if(isPresent)
         {
@@ -60,7 +59,7 @@ class IdeaRepository implements IIdeaRepository {
         }});
 
         console.log("the update response from the database is as follows \n", updateResponse);
-        
+
         // say everything went fine 
         return repositoryResponse;
     }

@@ -75,6 +75,28 @@ class IdeaController {
             next(error);
         }
     }
+
+    async shareIdeaByUserController (req : Request, res : Response, next : NextFunction) : Promise<void> 
+    {
+        // here we have to call the service but do note that we have to do this inside the try catch block for this purpose 
+        try {
+            // fetching the token from header for this purpose 
+            const clientToken : string | undefined = req.headers.authorization?.split(" ")[1];
+            const ideaId : string = req.params["ideaId"];
+
+            if(!clientToken)
+            {
+                throw new AuthenticationError("Token not found.");
+            }
+
+            let serviceResponse = await ideaService.shareIdeaByIdService(clientToken, ideaId);
+
+            // say everything went fine 
+            res.status(200).json(serviceResponse);
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 // say everything went fine 

@@ -22,8 +22,14 @@ class IdeaService implements IIdeaService {
         // we have to write this code using the try catch block for this purpose 
         try {
             let serviceResponse = new ServiceResponse<string>();
+            // fetching the userid from the clietn token for this purpopse 
+            const tokenDecode : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
+            const userId : string = tokenDecode.id;
             // here we have to call the repository for this purpose 
-
+            let repositoryResponse = await ideaRepository.shareIdeaByUser(userId, ideaId);
+            serviceResponse.message = repositoryResponse;
+            serviceResponse.success = true;
+            
             // say everything went fine 
             return serviceResponse;
         } catch (error) {
