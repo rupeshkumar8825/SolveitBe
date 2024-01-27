@@ -11,11 +11,52 @@ interface IIdeaRepository {
     getIdeaById (ideaId : string) : Promise<Idea> ,
     createNewIdea(ideaDetails : IdeaCreateRequestDto) : Promise<IdeaCreateResponseDto>,
     deleteIdeaById(ideaId : string) : Promise<string>, 
-    saveIdeaByUser(userId : string, ideaId : string) : Promise<string>
+    saveIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
+    upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>
 }
 
 // creating the idea reposioty class for this purpose 
 class IdeaRepository implements IIdeaRepository {
+    async upvoteIdeaByUser(userId: string, ideaId: string): Promise<string> {
+        // here we have to do the same thing which we have done earlier for this puropse 
+        // fetching the curruser and curridea for this purpose 
+        let repositoryResponse : string = "";
+        let currUser : User|null = await userModel.findOne({_id : userId});
+        let currIdeaModel : Idea | null = await ideaModel.findOne({_id : ideaId});
+
+        // checking whether they exists or not for this puropse 
+        if(!currUser)
+        {
+            throw new NotFoundError("User does not exists.");
+        }
+        if(!currIdeaModel)
+        {
+            throw new NotFoundError("Idea does not exists.");
+        }
+
+        // otherwise we have to fetch the current array of the upvotes for this purpose 
+        let upvotedList = currIdeaModel.upvotes;
+        console.log("the value of the upvoted list is as follows \n")
+
+        // using the for loop to check whether the user has already upvoted or not 
+        upvotedList.forEach((currUserId : mongoose.Types.ObjectId) => {
+            console.log("the value of the current user id is as follows\n")
+            console.log(currUserId);
+        });
+
+        const userIdObjectId = new mongoose.Types.ObjectId(userId);
+        // now we have to insert here for this puropse 
+        upvotedList.push(userIdObjectId);
+        
+        // now here we have to update the values for this purpose in the database itself 
+        const updatedResponse = await ideaModel.updateOne({_id : ideaId}, {$set : {
+            upvotes : upvotedList
+        }});
+
+        console.log("the updated value of the response is as follows \n", updatedResponse);
+        // say everything went fine
+        return repositoryResponse;
+    }
     async getAllIdeas(): Promise<Idea[]> {
         let repositoryResponse : Array<Idea> = new Array<Idea>();
 
