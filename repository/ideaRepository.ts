@@ -12,11 +12,58 @@ interface IIdeaRepository {
     createNewIdea(ideaDetails : IdeaCreateRequestDto) : Promise<IdeaCreateResponseDto>,
     deleteIdeaById(ideaId : string) : Promise<string>, 
     saveIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
-    upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>
+    upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
+    shareIdeaByUser(userId : string, ideaId : string) : Promise<string>
 }
 
 // creating the idea reposioty class for this purpose 
 class IdeaRepository implements IIdeaRepository {
+    async shareIdeaByUser(userId: string, ideaId: string): Promise<string> {
+        let repositoryResponse : string = "";
+        // fetching the current user and current idea for this purpose 
+        const currUser : User|null = await userModel.findOne({_id : userId});
+        const currIdea : Idea|null = await ideaModel.findOne({_id : ideaModel});
+
+        // checking whether these exists or not for this purpose 
+        if(!currUser)
+        {
+            throw new NotFoundError("User does not exists.");
+        }
+        if(!currIdea)
+        {
+            throw new NotFoundError("Idea does not exist.");
+        }
+
+        // otherwise we have to fetch the list of shares 
+        const sharedList = await currIdea.shared;
+        let isPresent : boolean = false;
+
+        // using the for loop for this purpose 
+        sharedList.forEach((currShare : mongoose.Types.ObjectId) => {
+            if(currShare._id.toString() === userId)
+            {
+                isPresent = true;
+            }
+        })
+
+        // here we have to implement the same logic as we have done before 
+        if(isPresent)
+        {
+            throw new ConflictError("User already in the shared list.");
+        }
+        
+        const userIdObjectId = new mongoose.Types.ObjectId(userId);
+        // here we have to update in the database for this purpose 
+        sharedList.push(userIdObjectId);
+        const updateResponse = await ideaModel.updateOne({_id : ideaId}, {$set : {
+            shared : sharedList
+        }});
+
+        console.log("the update response from the database is as follows \n", updateResponse);
+        
+        // say everything went fine 
+        return repositoryResponse;
+    }
     async upvoteIdeaByUser(userId: string, ideaId: string): Promise<string> {
         // here we have to do the same thing which we have done earlier for this puropse 
         // fetching the curruser and curridea for this purpose 

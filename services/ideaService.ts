@@ -12,11 +12,24 @@ interface IIdeaService {
     addNewIdeaService(ideaDetails : IdeaCreateRequestDto) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
     deleteIdeaService(ideaId : string) : Promise<ServiceResponse<string>>, 
     saveIdeaByUserService (clientToken : string , ideaId : string) : Promise<ServiceResponse<string>>, 
-    upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
+    upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
+    shareIdeaByIdService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
 }
 
 
 class IdeaService implements IIdeaService {
+    async shareIdeaByIdService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
+        // we have to write this code using the try catch block for this purpose 
+        try {
+            let serviceResponse = new ServiceResponse<string>();
+            // here we have to call the repository for this purpose 
+
+            // say everything went fine 
+            return serviceResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
     async upvotedIdeaByUserService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
         // here we have to use the try catch block for this purpose 
         try {
@@ -39,7 +52,7 @@ class IdeaService implements IIdeaService {
     }
 
 
-    
+
     async getAllIdeasService(): Promise<ServiceResponse<Idea[]>> {
         
         try {
