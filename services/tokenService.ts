@@ -6,6 +6,7 @@ import * as jwt from "jsonwebtoken";
 import { OAuth2Client } from "google-auth-library"
 import { AuthenticationError } from "../errorHandling/AuthenticationError";
 import AppConfig from '../config/appConfig';
+import { ILoginTokenDecode } from '../interfaces';
 
 export interface ITokenDecode{
     user : string, 
@@ -17,18 +18,24 @@ export interface ITokenDecode{
 interface ITokenService {
     validateGoogleTokenService(googleToken : string) : Promise<ITokenDecode>, 
     getLoginTokenService(currUser : User) : Promise<string>
-    decodeTokenService(token : string) : Promise<string>
+    decodeTokenService(token : string) : Promise<ILoginTokenDecode>
 };
 
 
 // using the class based implementation for this purpose 
 class TokenService implements ITokenService {
-    async decodeTokenService(token: string): Promise<string> {
+    async decodeTokenService(token: string): Promise<ILoginTokenDecode> {
         // here we have to decode the token for this purpose 
-        const decoded = await jwt.verify(token as string, AppConfig.app.secret);
+        const decoded : jwt.JwtPayload= await jwt.verify(token as string, AppConfig.app.secret) as jwt.JwtPayload;
+        const serviceResponse : ILoginTokenDecode = {
+            id : decoded._id as string, 
+            email : decoded.email as string , 
+            exp : decoded.exp as number 
+        };
 
+        
         // say everything went fine 
-        return decoded as string;
+        return serviceResponse;
         
     }
 

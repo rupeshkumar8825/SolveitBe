@@ -3,12 +3,15 @@ import Idea, { ideaModel } from './../models/ideaModel';
 import { IdeaCreateResponseDto, IdeaCreateRequestDto } from '../Dtos/IdeaRelatedDtos';
 import ideaRepository from '../repository/ideaRepository';
 import { ServerError } from '../errorHandling/ServerError';
+import tokenService from './tokenService';
+import { ILoginTokenDecode } from '../interfaces';
 
 interface IIdeaService {
     getAllIdeasService() : Promise<ServiceResponse<Array<Idea>>>, 
     getIdeaByIdService(ideaId : string) : Promise<ServiceResponse<Idea>>, 
     addNewIdeaService(ideaDetails : IdeaCreateRequestDto) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
-    deleteIdeaService(ideaId : string) : Promise<ServiceResponse<string>>
+    deleteIdeaService(ideaId : string) : Promise<ServiceResponse<string>>, 
+    saveIdeaByUserService (clientToken : string , userId : string) : Promise<ServiceResponse<string>>
 }
 
 
@@ -67,7 +70,7 @@ class IdeaService implements IIdeaService {
             serviceResponse.success = true;
             serviceResponse.message = "success";
             serviceResponse.data = repositoryResponse;
-
+            
             // say everything went fine 
             return serviceResponse;
         } catch (error) {
@@ -76,6 +79,24 @@ class IdeaService implements IIdeaService {
 
     }
     
+    async saveIdeaByUserService(clientToken : string, ideaId: string): Promise<ServiceResponse<string>> {
+        // using the try catch block  for this purpose 
+        try {
+            // here we have to find the userid from the token itself for this purpose 
+            let tokenServiceResponse : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
+            console.log("the decoded information about the token is as follows \n", tokenServiceResponse);
+            const userId : string = tokenServiceResponse.id;
+
+            // here we have to call the idearepository for this puropse 
+            let repositoryResponse = await ideaRepository.saveIdeaByUser(userId, ideaId);
+            let serviceResponse = new ServiceResponse<string>();
+            // say everything went fine 
+            return serviceResponse;
+            // let serviceResponse = await 
+        } catch (error) {
+            throw error
+        }
+    }
     deleteIdeaService(ideaId: string): Promise<ServiceResponse<string>> {
         throw new Error('Method not implemented.');
     }

@@ -1,4 +1,5 @@
 import { ServiceResponse } from "../Dtos/ServiceResponseDto";
+import { AuthenticationError } from "../errorHandling/AuthenticationError";
 import ideaService from "../services/ideaService";
 import IdeaService from "../services/ideaService";
 import{Response, Request, NextFunction} from "express";
@@ -29,13 +30,30 @@ class IdeaController {
     }
 
     async getIdeaDetailsByIdController (req : Request, res: Response , next : NextFunction) : Promise<void> {
-        // using the try catch block for this purpose 
         try {
-            // here we just have to call the idea repository to get the details of the idea given the id of the idea for this purpose 
-            let serviceResponse = await ideaService.getIdeaByIdService(req.params["userId"]);
+            let serviceResponse = await ideaService.getIdeaByIdService(req.params["ideaId"]);
             res.status(200).json({serviceResponse});
         } catch (error) {
             next(error);
+        }
+    }
+
+    // making the controller function to allow to save the idea 
+    async saveIdeaByUserController(req : Request, res : Response, next : NextFunction) : Promise<void>
+    {
+        try {
+            const clientToken : string|undefined = req.headers.authorization?.split(" ")[1];
+            if(!clientToken)
+            {
+                // here we have to throw the error for this pruopse 
+                throw new AuthenticationError("Cannot Find Token in the header\n");
+            }
+            let ideaId : string = req.params["ideaId"];
+            let response = await ideaService.saveIdeaByUserService(clientToken, ideaId);
+            // say everything went fine 
+            res.status(200).json(response);
+        } catch (error) {
+            next(error)
         }
     }
 }
