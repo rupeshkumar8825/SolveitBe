@@ -3,6 +3,7 @@ import { IdeaCreateRequestDto, IdeaCreateResponseDto } from "../Dtos/IdeaRelated
 import Idea, { ideaModel } from "../models/ideaModel";
 import { NotFoundError } from '../errorHandling/NotFoundError';
 import User, { userModel } from '../models/userModel';
+import { ConflictError } from "../errorHandling/ConflictError";
 
 // this is repostiory for the authentication related services for this purpose 
 interface IIdeaRepository {
@@ -84,17 +85,31 @@ class IdeaRepository implements IIdeaRepository {
         
         let savedUserIds = currIdeaModel.saved;
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
+        let isPresent : boolean = false;
 
-        // now in this we have to insert the new user id for this purpose 
+        // here we have to first check whether the user haS ALREADY SAVED the idea or not 
+        // using the for loop for this purpose 
+        savedUserIds.forEach((currUserId : mongoose.Types.ObjectId) => {
+            if(currUserId._id.toString() === userId.toString())
+            {
+                console.log("both are same hence we have to make it true for this purpose \n");
+                isPresent = true;
+            }
+        });
+
+        if(isPresent)
+        {
+            console.log("came inside the error if else condition for this purpose \n");
+            throw new ConflictError("User has already Saved the idea.");
+        }
+    
+        console.log("the value of the ispresent is : ", isPresent);
         savedUserIds.push(userIdObjectId);
-        
-        console.log("the list of users who have saved the idea are as follows \n", savedUserIds);
         const updateResponse = await ideaModel.updateOne({_id : ideaId}, {$set: {
             saved : savedUserIds
         }});
 
-        console.log("the response after updating the value of the mongodb entry is as follows \n");
-        console.log(updateResponse);
+        repositoryResponse = "Success";
         // say everything went fine 
         return repositoryResponse;
     }
