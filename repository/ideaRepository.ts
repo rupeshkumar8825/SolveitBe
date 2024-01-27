@@ -36,16 +36,26 @@ class IdeaRepository implements IIdeaRepository {
 
         // otherwise we have to fetch the current array of the upvotes for this purpose 
         let upvotedList = currIdeaModel.upvotes;
-        console.log("the value of the upvoted list is as follows \n")
-
+        
+        let isPresent :  boolean = false;
+        
         // using the for loop to check whether the user has already upvoted or not 
         upvotedList.forEach((currUserId : mongoose.Types.ObjectId) => {
             console.log("the value of the current user id is as follows\n")
             console.log(currUserId);
+            if(currUserId._id.toString() === userId)
+            {
+                isPresent = true;
+            }
         });
 
+        if(isPresent)
+        {
+            // here we have to throw the error for this purpose 
+            throw new ConflictError("User has already upvoted the idea.");
+        }
+
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
-        // now we have to insert here for this puropse 
         upvotedList.push(userIdObjectId);
         
         // now here we have to update the values for this purpose in the database itself 
@@ -53,7 +63,7 @@ class IdeaRepository implements IIdeaRepository {
             upvotes : upvotedList
         }});
 
-        console.log("the updated value of the response is as follows \n", updatedResponse);
+        // console.log("the updated value of the response is as follows \n", updatedResponse);
         // say everything went fine
         return repositoryResponse;
     }

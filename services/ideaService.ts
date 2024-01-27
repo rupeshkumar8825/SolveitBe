@@ -11,11 +11,35 @@ interface IIdeaService {
     getIdeaByIdService(ideaId : string) : Promise<ServiceResponse<Idea>>, 
     addNewIdeaService(ideaDetails : IdeaCreateRequestDto) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
     deleteIdeaService(ideaId : string) : Promise<ServiceResponse<string>>, 
-    saveIdeaByUserService (clientToken : string , userId : string) : Promise<ServiceResponse<string>>
+    saveIdeaByUserService (clientToken : string , ideaId : string) : Promise<ServiceResponse<string>>, 
+    upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
 }
 
 
 class IdeaService implements IIdeaService {
+    async upvotedIdeaByUserService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
+        // here we have to use the try catch block for this purpose 
+        try {
+            // here we have to fetch the value of the userid from the token for this puropse 
+            const tokenDecode : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
+            const userId : string = tokenDecode.id;
+
+
+            // calling the repository for updateing the entries inside the database for this puropse 
+            let repositoryResponse = await ideaRepository.upvoteIdeaByUser(userId, ideaId)
+            let serviceResponse  = new ServiceResponse<string>();
+            serviceResponse.success = true;
+            serviceResponse.message = repositoryResponse;
+            
+            // say everything went fine 
+            return serviceResponse;
+        } catch (error) {
+            throw error;     
+        }
+    }
+
+
+    
     async getAllIdeasService(): Promise<ServiceResponse<Idea[]>> {
         
         try {
@@ -54,7 +78,7 @@ class IdeaService implements IIdeaService {
     async addNewIdeaService(ideaDetails: IdeaCreateRequestDto): Promise<ServiceResponse<IdeaCreateResponseDto>> {
         // here we have to validate the user and get hte user details for this purpose 
         console.log("the details about the new idea details is as follows \n");
-        console.log(ideaDetails);
+        console.log(ideaDetails); 
 
         // using the try catch block for this purpose 
         try {
