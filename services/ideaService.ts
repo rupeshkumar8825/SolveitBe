@@ -80,19 +80,19 @@ class IdeaService implements IIdeaService {
     }
     
     async saveIdeaByUserService(clientToken : string, ideaId: string): Promise<ServiceResponse<string>> {
-        // using the try catch block  for this purpose 
         try {
-            // here we have to find the userid from the token itself for this purpose 
+
             let tokenServiceResponse : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
-            console.log("the decoded information about the token is as follows \n", tokenServiceResponse);
             const userId : string = tokenServiceResponse.id;
 
             // here we have to call the idearepository for this puropse 
             let repositoryResponse = await ideaRepository.saveIdeaByUser(userId, ideaId);
             let serviceResponse = new ServiceResponse<string>();
-            // say everything went fine 
+            serviceResponse.success = true;
+            serviceResponse.message = repositoryResponse;
+
             return serviceResponse;
-            // let serviceResponse = await 
+
         } catch (error) {
             throw error
         }

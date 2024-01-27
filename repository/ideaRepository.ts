@@ -67,9 +67,7 @@ class IdeaRepository implements IIdeaRepository {
         let repositoryResponse = "";
 
         // here we have to update the ideamodel value for this purpose 
-        console.log("fetching the value of the ideamodel using the id for this puropse \n");
         let currIdeaModel : Idea|null = await ideaModel.findById({_id : ideaId});
-        console.log("fetchign the value  of the usermodel for this purpose \n");
         let currUser : User|null = await userModel.findById({_id : userId});
         if(!currIdeaModel)
         {
@@ -80,30 +78,23 @@ class IdeaRepository implements IIdeaRepository {
             throw new NotFoundError("User not found");
         }
 
-
-        // otherwise we have to think how to update the records inside the existing document for this purpose in the typescript 
         
         let savedUserIds = currIdeaModel.saved;
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
         let isPresent : boolean = false;
 
-        // here we have to first check whether the user haS ALREADY SAVED the idea or not 
-        // using the for loop for this purpose 
         savedUserIds.forEach((currUserId : mongoose.Types.ObjectId) => {
             if(currUserId._id.toString() === userId.toString())
             {
-                console.log("both are same hence we have to make it true for this purpose \n");
                 isPresent = true;
             }
         });
 
         if(isPresent)
         {
-            console.log("came inside the error if else condition for this purpose \n");
             throw new ConflictError("User has already Saved the idea.");
         }
     
-        console.log("the value of the ispresent is : ", isPresent);
         savedUserIds.push(userIdObjectId);
         const updateResponse = await ideaModel.updateOne({_id : ideaId}, {$set: {
             saved : savedUserIds

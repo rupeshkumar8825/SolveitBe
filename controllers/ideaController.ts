@@ -50,7 +50,6 @@ class IdeaController {
             }
             let ideaId : string = req.params["ideaId"];
             let response = await ideaService.saveIdeaByUserService(clientToken, ideaId);
-            // say everything went fine 
             res.status(200).json(response);
         } catch (error) {
             next(error)
