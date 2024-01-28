@@ -29,13 +29,15 @@ class IdeaService implements IIdeaService {
             let repositoryResponse = await ideaRepository.shareIdeaByUser(userId, ideaId);
             serviceResponse.message = repositoryResponse;
             serviceResponse.success = true;
-            
+
             // say everything went fine 
             return serviceResponse;
         } catch (error) {
             throw error;
         }
     }
+
+    
     async upvotedIdeaByUserService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
         // here we have to use the try catch block for this purpose 
         try {

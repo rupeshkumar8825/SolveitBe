@@ -10,7 +10,7 @@ interface IIdeaRepository {
     getAllIdeas () : Promise<Array<Idea>>,
     getIdeaById (ideaId : string) : Promise<Idea> ,
     createNewIdea(ideaDetails : IdeaCreateRequestDto) : Promise<IdeaCreateResponseDto>,
-    deleteIdeaById(ideaId : string) : Promise<string>, 
+    deleteIdeaById(userId : string, ideaId : string) : Promise<string>, 
     saveIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     shareIdeaByUser(userId : string, ideaId : string) : Promise<string>
@@ -156,8 +156,31 @@ class IdeaRepository implements IIdeaRepository {
     }
 
 
-    deleteIdeaById(ideaId: string): Promise<string> {
-        throw new Error("Method not implemented.");
+    async deleteIdeaById(userId : string, ideaId: string): Promise<string> {
+        // here we have to delete the idea for this puropse 
+        // the idea can only be deleted by the user who has created this for this purpose 
+        let repositoryResponse = " ";
+        console.log("the userid and the idea id is as follows inside the repositoryresponse\n", userId, " ", ideaId);
+        const currIdeaDetails = await ideaModel.findOne({_id : ideaId});
+        const currUser = await userModel.findOne({_id : userId});
+        if(!currIdeaDetails)
+        {
+            // here we have to throw new error for this puropse 
+            throw new NotFoundError("Idea does not exist.");
+        }
+
+        if(!currUser)
+        {
+            throw new NotFoundError("User does not exist.");
+        }
+
+        // now we have to check whether the user is same how has created this idewa 
+        const createdBy = currIdeaDetails.createdBy;
+        console.log("the user which created this idea is as follows \n", createdBy)
+        
+
+        // say everything went fine 
+        return repositoryResponse;
     }
     
     async saveIdeaByUser(userId: string, ideaId : string): Promise<string> {
