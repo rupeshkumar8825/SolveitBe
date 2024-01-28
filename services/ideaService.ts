@@ -149,7 +149,7 @@ class IdeaService implements IIdeaService {
             // here we have to fetch the value of the userid
             const tokenDecode : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
             const userId : string = tokenDecode.id;
-
+            
             // calling the repository here for this purpose 
             const repositoryResponse = await ideaRepository.deleteIdeaById(userId, ideaId);
 

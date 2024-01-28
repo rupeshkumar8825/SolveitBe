@@ -4,6 +4,7 @@ import Idea, { ideaModel } from "../models/ideaModel";
 import { NotFoundError } from '../errorHandling/NotFoundError';
 import User, { userModel } from '../models/userModel';
 import { ConflictError } from "../errorHandling/ConflictError";
+import { UnAuthorizedError } from "../errorHandling/UnAuthorizedError";
 
 // this is repostiory for the authentication related services for this purpose 
 interface IIdeaRepository {
@@ -160,12 +161,11 @@ class IdeaRepository implements IIdeaRepository {
         // here we have to delete the idea for this puropse 
         // the idea can only be deleted by the user who has created this for this purpose 
         let repositoryResponse = " ";
-        console.log("the userid and the idea id is as follows inside the repositoryresponse\n", userId, " ", ideaId);
         const currIdeaDetails = await ideaModel.findOne({_id : ideaId});
         const currUser = await userModel.findOne({_id : userId});
         if(!currIdeaDetails)
         {
-            // here we have to throw new error for this puropse 
+            // here we have to throw new error for this purpose 
             throw new NotFoundError("Idea does not exist.");
         }
 
@@ -176,8 +176,17 @@ class IdeaRepository implements IIdeaRepository {
 
         // now we have to check whether the user is same how has created this idewa 
         const createdBy = currIdeaDetails.createdBy;
-        console.log("the user which created this idea is as follows \n", createdBy)
+
+        // checking whether both are same or not 
+        if(!(userId === createdBy.toHexString()))
+        {
+            // then here we have to throw the unauthorized error for this puropse 
+            throw new UnAuthorizedError("This user cannot delete the idea as he has not created it.");
         
+        }
+
+        // otherwiwe we have to delete this idea for this purpose 
+        const deleteResponse = await ideaModel.deleteOne({_id : ideaId});
 
         // say everything went fine 
         return repositoryResponse;

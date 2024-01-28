@@ -1,3 +1,4 @@
+import { finished } from "stream";
 import { ServiceResponse } from "../Dtos/ServiceResponseDto";
 import { AuthenticationError } from "../errorHandling/AuthenticationError";
 import ideaService from "../services/ideaService";
@@ -97,6 +98,32 @@ class IdeaController {
             next(error)
         }
     }
+
+    async deleteIdeaBydIdController (req : Request, res : Response, next : NextFunction) : Promise<void> 
+    {
+        // using the try catch block to have the global exception for this purpose 
+        try {
+            // fetching the clienttoken from the header for this puropse 
+            const clientToken : string|undefined = req.headers.authorization?.split(" ")[1];
+            if(!clientToken)
+            {
+                // here we have to throw the error 
+                throw new AuthenticationError("Token does not exist.");
+            }
+
+            // fetching the ideaid from the req.params for this purpose 
+            const ideaId : string | undefined = req.params["ideaId"];
+
+            // calling the delete service here for this purpose 
+            let serviceResponse = await ideaService.deleteIdeaService(clientToken, ideaId);
+
+            // say everything went fine 
+            res.status(200).json(serviceResponse);
+
+        } catch (error) {
+            next(error)
+        }
+    } 
     
 }
 
