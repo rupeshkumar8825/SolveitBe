@@ -10,7 +10,7 @@ interface IIdeaService {
     getAllIdeasService() : Promise<ServiceResponse<Array<Idea>>>, 
     getIdeaByIdService(ideaId : string) : Promise<ServiceResponse<Idea>>, 
     addNewIdeaService(ideaDetails : IdeaCreateRequestDto) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
-    deleteIdeaService(ideaId : string) : Promise<ServiceResponse<string>>, 
+    deleteIdeaService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     saveIdeaByUserService (clientToken : string , ideaId : string) : Promise<ServiceResponse<string>>, 
     upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     shareIdeaByIdService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
@@ -142,8 +142,25 @@ class IdeaService implements IIdeaService {
             throw error
         }
     }
-    deleteIdeaService(ideaId: string): Promise<ServiceResponse<string>> {
-        throw new Error('Method not implemented.');
+    async deleteIdeaService(clientToken : string,ideaId: string): Promise<ServiceResponse<string>> {
+        // using the try catch block for writing the better code for this purpose 
+        try {
+            let serviceResponse = new ServiceResponse<string>();
+            // here we have to fetch the value of the userid
+            const tokenDecode : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
+            const userId : string = tokenDecode.id;
+
+            // calling the repository here for this purpose 
+            const repositoryResponse = await ideaRepository.deleteIdeaById(userId, ideaId);
+
+            serviceResponse.success = true;
+            serviceResponse.message = repositoryResponse;
+
+            // say everything went fine 
+            return serviceResponse;
+        } catch (error) {
+            throw error;
+        }
     }
 
 }
