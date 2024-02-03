@@ -9,8 +9,8 @@ const authMiddleware = (req : Request, res : Response,  next : NextFunction) => 
     console.log("inside the auth middleware to validate the user details \n");
     // we have to fetch the data from the header of the request 
     // const clientToken = req.headers.get('authorization')
-    const clientToken = req.headers.authorization?.split(" ")[1];
-
+    const clientToken = req.cookies.token;
+    console.log("the value of the clienttoken from the req.headers.cookeis is as follows \n", clientToken);
     if(!clientToken)
     {
         // then we have to throw the error here stating authorization is not there 

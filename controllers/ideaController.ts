@@ -11,7 +11,7 @@ class IdeaController {
         try {
             
             let serviceResponse = await IdeaService.getAllIdeasService();
-            res.status(200).json({serviceResponse});
+            res.status(200).json(serviceResponse);
             
             
         } catch (error) {

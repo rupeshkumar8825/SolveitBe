@@ -12,7 +12,7 @@ const AppConfig = {
         isDevelopment : ['development', 'dev', 'local'].includes(
             <string> process.env.SERVER
         ), 
-        port : parseInt(<string>process.env.PORT, 10) | 4000,
+        port : parseInt(<string>process.env.PORT, 10) | 4004,
         apiVersion : process.env.API_VERSION || 'v1', 
         secret : process.env.SECRET || 'somescafaslkdf&*(&*(&2w3r', 
         clientId : process.env.CLIENT_ID

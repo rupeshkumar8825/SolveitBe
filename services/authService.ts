@@ -8,17 +8,18 @@ import { NotFoundError } from "../errorHandling/NotFoundError";
 import { BadRequestError } from "../errorHandling/BadRequestError";
 import { ConflictError } from "../errorHandling/ConflictError";
 import { ServerError } from "../errorHandling/ServerError";
+import { ServiceResponse } from "../Dtos/ServiceResponseDto";
 
 // defining the interface of the authentication service in order to decouple the services from the controller 
 // also using this we will be able to use the dependency injection for this purpose 
 interface IAuthenticationService {
-    loginService (googleToken : string) : Promise<string>;
-    registerService (googleToken : string) : Promise<string>;
+    loginService (googleToken : string) : Promise<ServiceResponse<string>>;
+    registerService (googleToken : string) : Promise<ServiceResponse<string>>;
 }
 
 // using the class based implementation of the auth servive for this purpose 
 class AuthenticationService implements IAuthenticationService {
-    async loginService(googleToken: string): Promise<string> {
+    async loginService(googleToken: string): Promise<ServiceResponse<string>> {
         console.log("came inside the authentication service inside the login function for this purpose \n");
 
         // here we have to use the auth repository if needed at all for this purpose 
@@ -40,7 +41,11 @@ class AuthenticationService implements IAuthenticationService {
             // now we have to create a new token for this user 
             const loginToken = await TokenService.getLoginTokenService(currUser as User);
             console.log("the value of the token that i got is as follows \n", loginToken);
-            return loginToken;
+            let serviceResponse2 = new ServiceResponse<string>();
+            serviceResponse2.success = true;
+            serviceResponse2.message = "Success";
+            serviceResponse2.data = loginToken;
+            return serviceResponse2;
         } catch (error : any) {
             console.log("the value of the error is as follows inside teh authservice\n", error);
             if(error instanceof NotFoundError)
@@ -68,14 +73,15 @@ class AuthenticationService implements IAuthenticationService {
                 throw new ServerError("Something went wrong on the server side \n");
             }
         }
-        // say everything went fine 
-        return "";
     }
-    async registerService(googleToken: string): Promise<string> {
+    async registerService(googleToken: string): Promise<ServiceResponse<string>> {
         console.log("inside the authentication service and register function for this purpose .");
-
-        return "";
+        let serviceResponse = new ServiceResponse<string>();
+        // say everything went fine 
+        return serviceResponse;
     }
+
+    
 
 }
 
