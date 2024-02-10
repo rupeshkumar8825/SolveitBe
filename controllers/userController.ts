@@ -1,7 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import userService from "../services/userService";
 
-// here we have to create the use controller here for this purpose 
+
+
 class UserController {
     async getAllUsersController(req : Request, res: Response, next : NextFunction) : Promise<void> {
         try {

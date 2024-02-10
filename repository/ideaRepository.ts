@@ -6,7 +6,7 @@ import User, { userModel } from '../models/userModel';
 import { ConflictError } from "../errorHandling/ConflictError";
 import { UnAuthorizedError } from "../errorHandling/UnAuthorizedError";
 
-// this is repostiory for the authentication related services for this purpose 
+
 interface IIdeaRepository {
     getAllIdeas () : Promise<Array<Idea>>,
     getIdeaById (ideaId : string) : Promise<Idea> ,
@@ -17,15 +17,15 @@ interface IIdeaRepository {
     shareIdeaByUser(userId : string, ideaId : string) : Promise<string>
 }
 
-// creating the idea reposioty class for this purpose 
+
+
+
 class IdeaRepository implements IIdeaRepository {
     async shareIdeaByUser(userId: string, ideaId: string): Promise<string> {
         let repositoryResponse : string = "";
-        // fetching the current user and current idea for this purpose 
         const currUser : User|null = await userModel.findOne({_id : userId});
         const currIdea : Idea|null = await ideaModel.findOne({_id : ideaId});
 
-        // checking whether these exists or not for this purpose 
         if(!currUser)
         {
             throw new NotFoundError("User does not exists.");
@@ -35,10 +35,12 @@ class IdeaRepository implements IIdeaRepository {
             throw new NotFoundError("Idea does not exist.");
         }
 
+
         // otherwise we have to fetch the list of shares 
         let sharedList = currIdea.shared;
         let isPresent : boolean = false;
-        // using the for loop for this purpose 
+
+
         sharedList.forEach((currShare : mongoose.Types.ObjectId) => {
             if(currShare._id.toString() === userId)
             {
@@ -46,32 +48,32 @@ class IdeaRepository implements IIdeaRepository {
             }
         })
         
-        // here we have to implement the same logic as we have done before 
+
         if(isPresent)
         {
             throw new ConflictError("User already in the shared list.");
         }
         
+
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
-        // here we have to update in the database for this purpose 
         sharedList.push(userIdObjectId);
         const updateResponse = await ideaModel.updateOne({_id : ideaId}, {$set : {
             shared : sharedList
         }});
 
-        console.log("the update response from the database is as follows \n", updateResponse);
 
         // say everything went fine 
         return repositoryResponse;
     }
+
+
+
+
     async upvoteIdeaByUser(userId: string, ideaId: string): Promise<string> {
-        // here we have to do the same thing which we have done earlier for this puropse 
-        // fetching the curruser and curridea for this purpose 
         let repositoryResponse : string = "";
         let currUser : User|null = await userModel.findOne({_id : userId});
         let currIdeaModel : Idea | null = await ideaModel.findOne({_id : ideaId});
 
-        // checking whether they exists or not for this puropse 
         if(!currUser)
         {
             throw new NotFoundError("User does not exists.");
@@ -81,49 +83,47 @@ class IdeaRepository implements IIdeaRepository {
             throw new NotFoundError("Idea does not exists.");
         }
 
-        // otherwise we have to fetch the current array of the upvotes for this purpose 
+
         let upvotedList = currIdeaModel.upvotes;
-        
         let isPresent :  boolean = false;
         
-        // using the for loop to check whether the user has already upvoted or not 
+
         upvotedList.forEach((currUserId : mongoose.Types.ObjectId) => {
-            console.log("the value of the current user id is as follows\n")
-            console.log(currUserId);
             if(currUserId._id.toString() === userId)
             {
                 isPresent = true;
             }
         });
 
+        
+        
         if(isPresent)
         {
-            // here we have to throw the error for this purpose 
             throw new ConflictError("User has already upvoted the idea.");
         }
 
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
         upvotedList.push(userIdObjectId);
-        
-        // now here we have to update the values for this purpose in the database itself 
         const updatedResponse = await ideaModel.updateOne({_id : ideaId}, {$set : {
             upvotes : upvotedList
         }});
 
-        // console.log("the updated value of the response is as follows \n", updatedResponse);
+
         // say everything went fine
         return repositoryResponse;
     }
+    
+
+
     async getAllIdeas(): Promise<Idea[]> {
         let repositoryResponse : Array<Idea> = new Array<Idea>();
-
         repositoryResponse = await ideaModel.find();
         
-        // say everything went fine 
         return repositoryResponse
     }
     
     
+
     getIdeaById(ideaId: string): Promise<Idea> {
         throw new Error("Method not implemented.");
     }
@@ -157,33 +157,28 @@ class IdeaRepository implements IIdeaRepository {
     }
 
 
+
     async deleteIdeaById(userId : string, ideaId: string): Promise<string> {
-        // here we have to delete the idea for this puropse 
-        // the idea can only be deleted by the user who has created this for this purpose 
         let repositoryResponse = " ";
         const currIdeaDetails = await ideaModel.findOne({_id : ideaId});
         const currUser = await userModel.findOne({_id : userId});
         if(!currIdeaDetails)
         {
-            // here we have to throw new error for this purpose 
             throw new NotFoundError("Idea does not exist.");
         }
-
         if(!currUser)
         {
             throw new NotFoundError("User does not exist.");
         }
 
-        // now we have to check whether the user is same how has created this idewa 
-        const createdBy = currIdeaDetails.createdBy;
 
-        // checking whether both are same or not 
+        const createdBy = currIdeaDetails.createdBy;
         if(!(userId === createdBy.toHexString()))
         {
-            // then here we have to throw the unauthorized error for this puropse 
             throw new UnAuthorizedError("This user cannot delete the idea as he has not created it.");
         
         }
+
 
         // otherwiwe we have to delete this idea for this purpose 
         const deleteResponse = await ideaModel.deleteOne({_id : ideaId});
@@ -191,11 +186,13 @@ class IdeaRepository implements IIdeaRepository {
         // say everything went fine 
         return repositoryResponse;
     }
+
     
+
+
     async saveIdeaByUser(userId: string, ideaId : string): Promise<string> {
         let repositoryResponse = "";
 
-        // here we have to update the ideamodel value for this purpose 
         let currIdeaModel : Idea|null = await ideaModel.findById({_id : ideaId});
         let currUser : User|null = await userModel.findById({_id : userId});
         if(!currIdeaModel)
@@ -210,6 +207,8 @@ class IdeaRepository implements IIdeaRepository {
         
         let savedUserIds = currIdeaModel.saved;
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
+
+
         let isPresent : boolean = false;
 
         savedUserIds.forEach((currUserId : mongoose.Types.ObjectId) => {
@@ -218,19 +217,18 @@ class IdeaRepository implements IIdeaRepository {
                 isPresent = true;
             }
         });
-
         if(isPresent)
         {
             throw new ConflictError("User has already Saved the idea.");
         }
     
+
         savedUserIds.push(userIdObjectId);
         const updateResponse = await ideaModel.updateOne({_id : ideaId}, {$set: {
             saved : savedUserIds
         }});
 
         repositoryResponse = "Success";
-        // say everything went fine 
         return repositoryResponse;
     }
 }
