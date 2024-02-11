@@ -13,4 +13,7 @@ router.route("/save/:ideaId").post(authMiddleware, ideaController.saveIdeaByUser
 router.route("/upvote/:ideaId").post(authMiddleware, ideaController.upvoteIdeaByUserController);
 router.route("/share/:ideaId").post(authMiddleware, ideaController.shareIdeaByUserController);
 router.route("/:ideaId").delete(authMiddleware, ideaController.deleteIdeaBydIdController);
+router.route("/:ideaId").get(authMiddleware, ideaController.getIdeaDetailsByIdController);
+
+
 export default router;

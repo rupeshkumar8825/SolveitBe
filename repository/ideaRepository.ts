@@ -124,8 +124,16 @@ class IdeaRepository implements IIdeaRepository {
     
     
 
-    getIdeaById(ideaId: string): Promise<Idea> {
-        throw new Error("Method not implemented.");
+    async getIdeaById(ideaId: string): Promise<Idea> {
+        let repositoryResponse : Idea | null = await ideaModel.findOne({_id : ideaId});
+
+        if(repositoryResponse === null)
+        {
+            throw new NotFoundError("Idea does not exists.");
+        }
+
+        // say everything went fine 
+        return repositoryResponse;
     }
     
 
