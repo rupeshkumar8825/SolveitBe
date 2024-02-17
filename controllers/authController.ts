@@ -17,7 +17,7 @@ class AuthController {
         try {
 
             const serviceResponse = await AuthenticationService.loginService(googleToken);
-            res.cookie("token", serviceResponse.data, {httpOnly : true, maxAge : 5 * 60 * 1000});
+            res.cookie("token", serviceResponse.data, {httpOnly : true, maxAge : 3600000});
             res.status(200).json(serviceResponse);
         } catch (error) {
             next(error);       

@@ -3,11 +3,11 @@ export class IdeaCreateRequestDto {
     ideaDescription : string;
     createdBy : string;
     category : string;
-    rating : number;
-    thumbnail : string;
+    rating : string;
+    thumbnail : File;
     othersKnow : string;
     
-    constructor (ideaName : string = "", ideaDescription : string = "", createdBy : string = "", category : string = "", rating : number = 0, thumbnail : string = "", othersKnow : string = "")
+    constructor (ideaName : string = "", ideaDescription : string = "", createdBy : string = "", category : string = "", rating : string = "", thumbnail : File, othersKnow : string = "")
     {
         this.ideaName = ideaName;
         this.ideaDescription = ideaDescription;

@@ -10,7 +10,7 @@ import { UnAuthorizedError } from "../errorHandling/UnAuthorizedError";
 interface IIdeaRepository {
     getAllIdeas () : Promise<Array<Idea>>,
     getIdeaById (ideaId : string) : Promise<Idea> ,
-    createNewIdea(ideaDetails : IdeaCreateRequestDto) : Promise<IdeaCreateResponseDto>,
+    createNewIdea(ideaDetails : IdeaCreateRequestDto, uploadedFileName : string) : Promise<IdeaCreateResponseDto>,
     deleteIdeaById(userId : string, ideaId : string) : Promise<string>, 
     saveIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
@@ -138,7 +138,7 @@ class IdeaRepository implements IIdeaRepository {
     
 
     
-    async createNewIdea(ideaDetails: IdeaCreateRequestDto): Promise<IdeaCreateResponseDto> {
+    async createNewIdea(ideaDetails: IdeaCreateRequestDto, uploadedFileName : string): Promise<IdeaCreateResponseDto> {
         let repositoryResponse : IdeaCreateResponseDto = new IdeaCreateResponseDto();
         let newIdea = new ideaModel({
             _id : new mongoose.Types.ObjectId(), 
@@ -147,8 +147,8 @@ class IdeaRepository implements IIdeaRepository {
             createdOn : Date.now(), 
             createdBy : ideaDetails.createdBy, 
             category : ideaDetails.category, 
-            rating : ideaDetails.rating, 
-            thumbnail : ideaDetails.thumbnail, 
+            rating : parseInt(ideaDetails.rating), 
+            thumbnail : uploadedFileName, 
             saved : [], 
             upvotes : [], 
             shared : [], 

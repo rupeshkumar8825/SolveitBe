@@ -4,6 +4,7 @@ import { AuthenticationError } from "../errorHandling/AuthenticationError";
 import ideaService from "../services/ideaService";
 import IdeaService from "../services/ideaService";
 import{Response, Request, NextFunction} from "express";
+import { NotFoundError } from "../errorHandling/NotFoundError";
 
 
 
@@ -24,7 +25,14 @@ class IdeaController {
 
     async createNewIdeaController (req :Request, res : Response, next : NextFunction) : Promise<void> {
         try {
-            let serviceResponse = await ideaService.addNewIdeaService(req.body);
+            let uploadedFileName = req.file?.filename;
+            if(!uploadedFileName) {
+                throw new NotFoundError("File name does not exist");
+            }
+
+            console.log("sending the value of the filename to the addnewideaservice. The file name is as follows : \n", uploadedFileName);
+            let serviceResponse = await ideaService.addNewIdeaService(req.body, uploadedFileName);
+            console.log("the response that i am sending to the frontend is as follows : \n", serviceResponse);
             res.status(200).json({serviceResponse});
         } catch (error) {
             next(error)

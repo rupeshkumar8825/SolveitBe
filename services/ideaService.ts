@@ -9,7 +9,7 @@ import { ILoginTokenDecode } from '../interfaces';
 interface IIdeaService {
     getAllIdeasService() : Promise<ServiceResponse<Array<Idea>>>, 
     getIdeaByIdService(ideaId : string) : Promise<ServiceResponse<Idea>>, 
-    addNewIdeaService(ideaDetails : IdeaCreateRequestDto) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
+    addNewIdeaService(ideaDetails : IdeaCreateRequestDto, uploadedFileName : string) : Promise<ServiceResponse<IdeaCreateResponseDto>>,
     deleteIdeaService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     saveIdeaByUserService (clientToken : string , ideaId : string) : Promise<ServiceResponse<string>>, 
     upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
@@ -104,10 +104,10 @@ class IdeaService implements IIdeaService {
     
 
 
-    async addNewIdeaService(ideaDetails: IdeaCreateRequestDto): Promise<ServiceResponse<IdeaCreateResponseDto>> {
+    async addNewIdeaService(ideaDetails: IdeaCreateRequestDto, uploadedFileName : string): Promise<ServiceResponse<IdeaCreateResponseDto>> {
         try {
             let serviceResponse  = new ServiceResponse<IdeaCreateResponseDto>();
-            let repositoryResponse = await ideaRepository.createNewIdea(ideaDetails);
+            let repositoryResponse = await ideaRepository.createNewIdea(ideaDetails, uploadedFileName);
 
             if(!repositoryResponse)
             {
@@ -158,7 +158,7 @@ class IdeaService implements IIdeaService {
             
             const repositoryResponse = await ideaRepository.deleteIdeaById(userId, ideaId);
 
-            
+
             serviceResponse.success = true;
             serviceResponse.message = repositoryResponse;
 

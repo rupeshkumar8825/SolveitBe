@@ -8,6 +8,8 @@ import dotenv from 'dotenv'
 import mainRouter from "./routes/index";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
+import multer from "multer";
+import path from "path";
 dotenv.config();
 
 
