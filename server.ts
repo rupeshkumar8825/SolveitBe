@@ -20,6 +20,7 @@ export const createServer = () : Application => {
 
     // using the middlewares that are required for this application for this purpose 
     app.use(express.urlencoded({extended : false}))
+    app.use(express.static(__dirname + '/public/uploads'));
     app.use(express.json());
     app.use(cookieParser());
     const corsOptions = {

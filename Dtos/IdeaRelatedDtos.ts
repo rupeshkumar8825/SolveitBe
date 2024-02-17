@@ -34,3 +34,14 @@ export class IdeaCreateResponseDto {
     }
 }
 
+
+export class IdeaThumbnailResponseDto {
+    _id : string;
+    thumbnail : string
+
+    constructor(id : string, thumbnail : string)
+    {
+        this._id = id; 
+        this.thumbnail = thumbnail;
+    }
+}

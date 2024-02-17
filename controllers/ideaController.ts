@@ -128,6 +128,16 @@ class IdeaController {
             next(error)
         }
     } 
+
+    async getAllIdeasThumbnailController(req : Request, res : Response, next : NextFunction) : Promise<void>
+    {
+        try {
+            let serviceResponse = await ideaService.getAllIdeasThumbnailService();
+            res.status(200).json(serviceResponse);
+        } catch (error) {
+            next(error);
+        }
+    }
     
 }
 

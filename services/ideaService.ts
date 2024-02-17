@@ -1,6 +1,6 @@
 import { ServiceResponse } from './../Dtos/ServiceResponseDto';
 import Idea, { ideaModel } from './../models/ideaModel';
-import { IdeaCreateResponseDto, IdeaCreateRequestDto } from '../Dtos/IdeaRelatedDtos';
+import { IdeaCreateResponseDto, IdeaCreateRequestDto, IdeaThumbnailResponseDto } from '../Dtos/IdeaRelatedDtos';
 import ideaRepository from '../repository/ideaRepository';
 import { ServerError } from '../errorHandling/ServerError';
 import tokenService from './tokenService';
@@ -13,11 +13,30 @@ interface IIdeaService {
     deleteIdeaService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     saveIdeaByUserService (clientToken : string , ideaId : string) : Promise<ServiceResponse<string>>, 
     upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
-    shareIdeaByIdService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
+    shareIdeaByIdService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
+    getAllIdeasThumbnailService() : Promise<ServiceResponse<Array<IdeaThumbnailResponseDto>>>
 }
 
 
 class IdeaService implements IIdeaService {
+    async getAllIdeasThumbnailService(): Promise<ServiceResponse<IdeaThumbnailResponseDto[]>> {
+        // here we have to use the try catch block for this purpose 
+        try {
+            let serviceResponse = new ServiceResponse<IdeaThumbnailResponseDto[]>();
+            // calling the repository for this purpose 
+            let repositoryResponse = await ideaRepository.getAllIdeasThumbnail();
+            serviceResponse.data = repositoryResponse;
+            serviceResponse.success = true;
+            serviceResponse.message = "Success";
+            return serviceResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    
+    
     async shareIdeaByIdService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
         try {
             let serviceResponse = new ServiceResponse<string>();

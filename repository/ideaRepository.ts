@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { IdeaCreateRequestDto, IdeaCreateResponseDto } from "../Dtos/IdeaRelatedDtos";
+import { IdeaCreateRequestDto, IdeaCreateResponseDto, IdeaThumbnailResponseDto } from "../Dtos/IdeaRelatedDtos";
 import Idea, { ideaModel } from "../models/ideaModel";
 import { NotFoundError } from '../errorHandling/NotFoundError';
 import User, { userModel } from '../models/userModel';
@@ -14,13 +14,27 @@ interface IIdeaRepository {
     deleteIdeaById(userId : string, ideaId : string) : Promise<string>, 
     saveIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
-    shareIdeaByUser(userId : string, ideaId : string) : Promise<string>
+    shareIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
+    getAllIdeasThumbnail() : Promise<Array<IdeaThumbnailResponseDto>>
 }
 
 
 
 
 class IdeaRepository implements IIdeaRepository {
+    async getAllIdeasThumbnail(): Promise<IdeaThumbnailResponseDto[]> {
+        let repositoryResponse = new Array<IdeaThumbnailResponseDto>();
+        
+        let ideaList : Idea[] = await ideaModel.find();
+        ideaList.forEach((currIdea : Idea) => {
+            repositoryResponse.push({_id : currIdea._id.toString(), thumbnail : currIdea.thumbnail});
+        });
+
+        return repositoryResponse;
+    }
+
+
+    
     async shareIdeaByUser(userId: string, ideaId: string): Promise<string> {
         let repositoryResponse : string = "";
         const currUser : User|null = await userModel.findOne({_id : userId});
