@@ -27,14 +27,15 @@ class IdeaRepository implements IIdeaRepository {
         
         let ideaList : Idea[] = await ideaModel.find();
         ideaList.forEach((currIdea : Idea) => {
-            repositoryResponse.push({_id : currIdea._id.toString(), thumbnail : currIdea.thumbnail});
+            let currThumbnailResponse = new IdeaThumbnailResponseDto(currIdea._id.toString(), currIdea.thumbnail);
+            repositoryResponse.push(currThumbnailResponse);
         });
 
         return repositoryResponse;
     }
 
 
-    
+
     async shareIdeaByUser(userId: string, ideaId: string): Promise<string> {
         let repositoryResponse : string = "";
         const currUser : User|null = await userModel.findOne({_id : userId});

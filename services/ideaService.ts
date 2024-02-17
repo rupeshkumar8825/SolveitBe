@@ -20,14 +20,15 @@ interface IIdeaService {
 
 class IdeaService implements IIdeaService {
     async getAllIdeasThumbnailService(): Promise<ServiceResponse<IdeaThumbnailResponseDto[]>> {
-        // here we have to use the try catch block for this purpose 
         try {
             let serviceResponse = new ServiceResponse<IdeaThumbnailResponseDto[]>();
-            // calling the repository for this purpose 
+
             let repositoryResponse = await ideaRepository.getAllIdeasThumbnail();
+            
             serviceResponse.data = repositoryResponse;
             serviceResponse.success = true;
             serviceResponse.message = "Success";
+            
             return serviceResponse;
         } catch (error) {
             throw error;
