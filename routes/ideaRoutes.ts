@@ -34,4 +34,4 @@ router.route("/image/thumbnail").get(authMiddleware, ideaController.getAllIdeasT
 router.route("/unVote/:ideaId").post(authMiddleware, ideaController.removeUpvoteOfIdeaController);
 
 
-export default router;
+export default router; 

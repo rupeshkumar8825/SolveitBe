@@ -66,7 +66,7 @@ class IdeaService implements IIdeaService {
             const userId : string = tokenDecode.id;
 
             // calling the repository for updateing the entries inside the database for this puropse 
-            let repositoryResponse = await ideaRepository.upvoteIdeaByUser(userId, ideaId)
+            let repositoryResponse = await ideaRepository.removeUpvoteOfIdea(userId, ideaId)
             let serviceResponse  = new ServiceResponse<string>();
             serviceResponse.success = true;
             serviceResponse.message = repositoryResponse;

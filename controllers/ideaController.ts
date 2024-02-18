@@ -30,9 +30,8 @@ class IdeaController {
                 throw new NotFoundError("File name does not exist");
             }
 
-            console.log("sending the value of the filename to the addnewideaservice. The file name is as follows : \n", uploadedFileName);
             let serviceResponse = await ideaService.addNewIdeaService(req.body, uploadedFileName);
-            console.log("the response that i am sending to the frontend is as follows : \n", serviceResponse);
+
             res.status(200).json({serviceResponse});
         } catch (error) {
             next(error)
@@ -55,7 +54,8 @@ class IdeaController {
     async saveIdeaByUserController(req : Request, res : Response, next : NextFunction) : Promise<void>
     {
         try {
-            const clientToken : string|undefined = req.headers.authorization?.split(" ")[1];
+            const clientToken = req.cookies.token;
+
             if(!clientToken)
             {
                 throw new AuthenticationError("Cannot Find Token in the header\n");
@@ -73,11 +73,11 @@ class IdeaController {
 
 
 
-    
+
     async removeUpvoteOfIdeaController (req : Request, res : Response, next : NextFunction) : Promise<void> 
     {
         try {
-            const clientToken : string | undefined = req.headers.authorization?.split(" ")[1];
+            const clientToken = req.cookies.token;
 
             if(!clientToken)
             {
@@ -98,7 +98,7 @@ class IdeaController {
     async upvoteIdeaByUserController (req : Request, res : Response, next : NextFunction) : Promise<void>
     {
         try {
-            const clientToken  : string|undefined = req.headers.authorization?.split(" ")[1];
+            const clientToken = req.cookies.token;
 
             if(!clientToken)
             {
@@ -116,7 +116,8 @@ class IdeaController {
     async shareIdeaByUserController (req : Request, res : Response, next : NextFunction) : Promise<void> 
     {
         try {
-            const clientToken : string | undefined = req.headers.authorization?.split(" ")[1];
+            const clientToken = req.cookies.token;
+
             const ideaId : string = req.params["ideaId"];
             if(!clientToken)
             {
@@ -135,7 +136,8 @@ class IdeaController {
     async deleteIdeaBydIdController (req : Request, res : Response, next : NextFunction) : Promise<void> 
     {
         try {
-            const clientToken : string|undefined = req.headers.authorization?.split(" ")[1];
+            const clientToken = req.cookies.token;
+
             if(!clientToken)
             {
                 throw new AuthenticationError("Token does not exist.");
