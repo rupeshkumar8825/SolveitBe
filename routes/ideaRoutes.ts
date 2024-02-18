@@ -13,11 +13,9 @@ const router = express.Router();
 var storage = multer.diskStorage({
     destination: 'public/uploads/', // uploading directory 
     filename: function ( req, file, cb ) { //change file name
-        console.log("the vaue of filename inside the upload middleware is \n", file);
         let ext = (path.extname(file.originalname)).toLowerCase(); //get file extension
         let time = Date.now(); //get timestamp
-        cb( null, 'idea-'+time+file.originalname+ext); //return renamed file
-        console.log("returning the file name from here. The new name of the file is \n", req.file?.filename );
+        cb( null, 'idea-'+time); //return renamed file
     }
 });
 
@@ -33,6 +31,7 @@ router.route("/share/:ideaId").post(authMiddleware, ideaController.shareIdeaByUs
 router.route("/:ideaId").delete(authMiddleware, ideaController.deleteIdeaBydIdController);
 router.route("/:ideaId").get(authMiddleware, ideaController.getIdeaDetailsByIdController);
 router.route("/image/thumbnail").get(authMiddleware, ideaController.getAllIdeasThumbnailController);
+router.route("/unVote/:ideaId").post(authMiddleware, ideaController.removeUpvoteOfIdeaController);
 
 
 export default router;

@@ -44,7 +44,7 @@ class IdeaController {
     async getIdeaDetailsByIdController (req : Request, res: Response , next : NextFunction) : Promise<void> {
         try {
             let serviceResponse = await ideaService.getIdeaByIdService(req.params["ideaId"]);
-            res.status(200).json({serviceResponse});
+            res.status(200).json(serviceResponse);
         } catch (error) {
             next(error);
         }
@@ -70,6 +70,30 @@ class IdeaController {
             next(error)
         }
     }
+
+
+
+    
+    async removeUpvoteOfIdeaController (req : Request, res : Response, next : NextFunction) : Promise<void> 
+    {
+        try {
+            const clientToken : string | undefined = req.headers.authorization?.split(" ")[1];
+
+            if(!clientToken)
+            {
+                throw new AuthenticationError("Cannot find the token in the header");
+            }
+
+            let ideaId : string = req.params["ideaId"];
+            let serviceResponse = await ideaService.removeUpvoteOfIdeaService(clientToken, ideaId);
+            res.status(200).json(serviceResponse);
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+
 
     async upvoteIdeaByUserController (req : Request, res : Response, next : NextFunction) : Promise<void>
     {

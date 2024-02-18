@@ -15,6 +15,7 @@ interface IIdeaService {
     upvotedIdeaByUserService (clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     shareIdeaByIdService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>, 
     getAllIdeasThumbnailService() : Promise<ServiceResponse<Array<IdeaThumbnailResponseDto>>>
+    removeUpvoteOfIdeaService(clientToken : string, ideaId : string) : Promise<ServiceResponse<string>>
 }
 
 
@@ -59,6 +60,24 @@ class IdeaService implements IIdeaService {
 
     
 
+    async removeUpvoteOfIdeaService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
+        try {
+            const tokenDecode : ILoginTokenDecode = await tokenService.decodeTokenService(clientToken);
+            const userId : string = tokenDecode.id;
+
+            // calling the repository for updateing the entries inside the database for this puropse 
+            let repositoryResponse = await ideaRepository.upvoteIdeaByUser(userId, ideaId)
+            let serviceResponse  = new ServiceResponse<string>();
+            serviceResponse.success = true;
+            serviceResponse.message = repositoryResponse;
+
+            
+            // say everything went fine 
+            return serviceResponse;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async upvotedIdeaByUserService(clientToken: string, ideaId: string): Promise<ServiceResponse<string>> {
         try {

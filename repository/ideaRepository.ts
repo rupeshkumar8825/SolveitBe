@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 import { IdeaCreateRequestDto, IdeaCreateResponseDto, IdeaThumbnailResponseDto } from "../Dtos/IdeaRelatedDtos";
 import Idea, { ideaModel } from "../models/ideaModel";
 import { NotFoundError } from '../errorHandling/NotFoundError';
@@ -16,12 +16,58 @@ interface IIdeaRepository {
     upvoteIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     shareIdeaByUser(userId : string, ideaId : string) : Promise<string>, 
     getAllIdeasThumbnail() : Promise<Array<IdeaThumbnailResponseDto>>
+    removeUpvoteOfIdea(userId : string, ideaId : string) : Promise<string>
 }
 
 
 
 
 class IdeaRepository implements IIdeaRepository {
+    async removeUpvoteOfIdea(userId: string, ideaId: string): Promise<string> {
+        let repositoryResponse : string = "";
+
+        
+        // fetching the idea for this purpose 
+        let currIdea : Idea|null = await ideaModel.findOne({_id : ideaId });
+        if(!currIdea)
+        {
+            throw new NotFoundError("Idea does not exist");
+        }
+
+        
+
+        // fetching the user here for this purpose 
+        let currUser : User|null = await userModel.findOne({_id : userId});
+        if(!currUser)
+        {
+            throw new NotFoundError("User does not exist");
+        }
+
+
+        let upvotedList = currIdea.upvotes;
+        let updatedUpvotedList : mongoose.Types.ObjectId[]= [];
+        upvotedList.forEach(currUser => {
+            if(currUser._id.toString() !== userId.toString())
+            {
+                const userObjectId = new mongoose.Types.ObjectId(userId);
+                updatedUpvotedList.push(userObjectId);
+                
+            }
+
+        });
+
+
+        await ideaModel.updateOne({_id : ideaId}, {$set : {upvotes : updatedUpvotedList}});
+
+        // say everything went fine 
+        return repositoryResponse;
+
+    }
+
+
+
+
+    
     async getAllIdeasThumbnail(): Promise<IdeaThumbnailResponseDto[]> {
         let repositoryResponse = new Array<IdeaThumbnailResponseDto>();
         
